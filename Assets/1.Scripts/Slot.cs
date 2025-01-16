@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class Slot : MonoBehaviour//, IPointerClickHandler
+public class Slot : MonoBehaviour
 {
     public Sprite image;
     ItemData _itemData=null;
@@ -99,13 +99,13 @@ public class Slot : MonoBehaviour//, IPointerClickHandler
             Debug.Log("아이템 사용");
             switch (_itemData.TypeGS)
             {
-                case ItemData.ItemType.Food:
+                case ItemType.Food:
                     Debug.Log("음식 사용");
                     UseFood();
                     break;
-                case ItemData.ItemType.Equipent:
+                case ItemType.Equipent:
                     break;
-                case ItemData.ItemType.Furniture:
+                case ItemType.Furniture:
                     break;
 
             }

@@ -18,9 +18,11 @@ public class PlayerMove : MonoBehaviour
     Vector3 MousePos;
     float SpaceDelay = 0.5f;
     GameObject MouseSys;
+    GameObject InvenUI;
     void Start()
     {
         MouseSys = GameObject.Find("MouseSystem");
+        InvenUI = GameObject.Find("Inventory");
         cam=Camera.main;
     }
 
@@ -43,31 +45,40 @@ public class PlayerMove : MonoBehaviour
             SpaceMove = false;
             MousePos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x,
                 Input.mousePosition.y, -Camera.main.transform.position.z));
-            if(MouseSys.GetComponent<MouseItem>().CheckNeedItem())
+            Vector3 InvenPos = Camera.main.ScreenToWorldPoint(new Vector3(InvenUI.transform.position.x,
+                InvenUI.transform.position.y, -Camera.main.transform.position.z));
+            if (MousePos.x> InvenPos.x-9.3f && MousePos.x < InvenPos.x + 9.3f && MousePos.y > InvenPos.y && MousePos.y < InvenPos.y + 1f)
             {
-                DropMove= true;
-                MouseMove=false;
+                MouseMove= false;
             }
             else
             {
-                DropMove= false;
-                colliders = Physics.OverlapSphere(MousePos, 0.15f, layer);
-
-                if (colliders.Length > 0)
+                if (MouseSys.GetComponent<MouseItem>().CheckNeedItem())
                 {
-                    float short_distance = Vector3.Distance(MousePos, colliders[0].transform.position);
-                    short_enemy = colliders[0];
-                    foreach (Collider col in colliders)
-                    {
-                        float short_distance2 = Vector3.Distance(MousePos, col.transform.position);
-                        if (short_distance > short_distance2)
-                        {
-                            short_distance = short_distance2;
-                            short_enemy = col;
-                        }
-                    }
+                    DropMove = true;
                     MouseMove = false;
-                    SpaceMove = true;
+                }
+                else
+                {
+                    DropMove = false;
+                    colliders = Physics.OverlapSphere(MousePos, 0.15f, layer);
+
+                    if (colliders.Length > 0)
+                    {
+                        float short_distance = Vector3.Distance(MousePos, colliders[0].transform.position);
+                        short_enemy = colliders[0];
+                        foreach (Collider col in colliders)
+                        {
+                            float short_distance2 = Vector3.Distance(MousePos, col.transform.position);
+                            if (short_distance > short_distance2)
+                            {
+                                short_distance = short_distance2;
+                                short_enemy = col;
+                            }
+                        }
+                        MouseMove = false;
+                        SpaceMove = true;
+                    }
                 }
             }
         }
@@ -116,9 +127,41 @@ public class PlayerMove : MonoBehaviour
             if (colliders.Length > 0)
             {
                 float short_distance = Vector3.Distance(transform.position, colliders[0].transform.position);
-                short_enemy = colliders[0];
+                if (colliders[0].tag== "Object")
+                {
+                    if (colliders[0].GetComponent<Environment>() != null)
+                    {
+                        if(colliders[0].GetComponent<Environment>().CheckAction())
+                        {
+                            short_enemy = colliders[0];
+                        }
+                        else
+                        {
+                            short_enemy=null;
+                        }
+                    }
+                    else
+                    {
+                        short_enemy = null;
+                    }
+                }
+                else
+                {
+                    short_enemy = colliders[0];
+                }
                 foreach (Collider col in colliders)
                 {
+                    if(col.tag == "Object")
+                    {
+                        if (col.GetComponent<Environment>() == null)
+                        {
+                            continue;
+                        }
+                        if (!col.GetComponent<Environment>().CheckAction())
+                        {
+                            continue;
+                        }
+                    }
                     float short_distance2 = Vector3.Distance(transform.position, col.transform.position);
                     if (short_distance > short_distance2)
                     {
@@ -143,15 +186,16 @@ public class PlayerMove : MonoBehaviour
                 }
                 else
                 {
-                    if(SpaceDelay>0)
+                    if (short_enemy.gameObject.tag == "Item")
                     {
-                        SpaceDelay-= Time.deltaTime;
-                    }
-                    else
-                    {
-                        SpaceMove = false;
-                        if (short_enemy.gameObject.tag == "Item")
+                        if (SpaceDelay > 0)
                         {
+                            SpaceDelay -= Time.deltaTime*4f;
+                        }
+                        else
+                        {
+                            SpaceDelay = 0.5f;
+                            SpaceMove = false;
                             Debug.Log("æ∆¿Ã≈€ »πµÊ");
                             if (gameObject.GetComponent<Inventory>() != null)
                             {
@@ -159,7 +203,33 @@ public class PlayerMove : MonoBehaviour
                             }
                             Destroy(short_enemy.gameObject);
                         }
-                        SpaceDelay = 0.5f;
+                    }
+                    else if(short_enemy.gameObject.tag == "Object")
+                    {
+                        if (short_enemy.GetComponent<Environment>() != null)
+                        {
+                            if (short_enemy.GetComponent<Environment>().CheckAction())
+                            {
+                                if (SpaceDelay > 0)
+                                {
+                                    SpaceDelay -= Time.deltaTime * short_enemy.GetComponent<Environment>().DelayPerGet;
+                                }
+                                else
+                                {
+                                    SpaceDelay = 0.5f;
+                                    SpaceMove = false;
+                                    short_enemy.GetComponent<Environment>().ObjAction();
+                                }
+                            }
+                            else
+                            {
+                                SpaceMove = false;
+                            }
+                        }
+                        else
+                        {
+                            SpaceMove = false;
+                        }
                     }
                 }
             }

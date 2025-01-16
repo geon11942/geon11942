@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MouseItem : MonoBehaviour
 {
@@ -6,10 +7,13 @@ public class MouseItem : MonoBehaviour
     ItemData IData;
     Vector2 MousePos;
     bool NeedItem = false;
-
+    GameObject ImageObj;
     void Start()
     {
+        ImageObj = GameObject.Find("MouseItemImage");
         Camera = GameObject.Find("Main Camera").GetComponent<Camera>();
+        ImageObj.GetComponent<Image>().sprite = null;
+        ImageObj.GetComponent<Image>().color = new Color(255, 255, 255, 0);
     }
 
     // Update is called once per frame
@@ -19,6 +23,7 @@ public class MouseItem : MonoBehaviour
         MousePos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x,
                 Input.mousePosition.y, -Camera.main.transform.position.z));
         transform.position = MousePos;
+        ImageObj.transform.position = Camera.main.WorldToScreenPoint( MousePos);
         //Debug.Log(MousePos);
     }
     public bool CheckNeedItem()
@@ -32,15 +37,15 @@ public class MouseItem : MonoBehaviour
         { 
             IData = value;
             NeedItem = true;
-            GetComponent<SpriteRenderer>().sprite=IData.ImageGS;
-            gameObject.GetComponent<SpriteRenderer>().color = new Color(255, 255, 255, 255);
+            ImageObj.GetComponent<Image>().sprite=IData.ImageGS;
+            ImageObj.GetComponent<Image>().color = new Color(255, 255, 255, 255);
         }
     }
     public void ItemEmpty()
     {
         NeedItem = false;
         IData = null;
-        GetComponentInChildren<SpriteRenderer>().sprite=null;
-        gameObject.GetComponent<SpriteRenderer>().color = new Color(255, 255, 255, 0);
+        ImageObj.GetComponent<Image>().sprite = null;
+        ImageObj.GetComponent<Image>().color = new Color(255, 255, 255, 0);
     }
 }
