@@ -5,19 +5,64 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class Slot : MonoBehaviour, IPointerClickHandler
+public class Slot : MonoBehaviour
 {
-    public Image image;
-    ItemData _itemData;
+    public Sprite image;
+    ItemData _itemData=null;
+    bool NeedItem=false;
+    GameObject Player;
+    GameObject _Image;
+    GameObject _text;
     void Start()
     {
-
+        Player = GameObject.Find("Player");
+        _Image = transform.GetChild(0).gameObject;
+        _text = transform.GetChild(1).gameObject;
+        if (image != null)
+        {
+            _Image.gameObject.GetComponent<Image>().sprite = image;
+            _Image.gameObject.GetComponent<Image>().color = new Color(255, 255, 255, 255);
+        }
+        else
+        {
+            _Image.gameObject.GetComponent<Image>().color = new Color(255, 255, 255, 0);
+        }
+        _text.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
-
+    }
+    public bool CheckNeedItem()
+    {
+        if(NeedItem)
+        {
+            return true;
+        }
+        else 
+        {
+            return false;
+        }
+    }
+    public void CheckStack()
+    {
+        if(NeedItem)
+        {
+            if (_itemData.StackGS > 1)
+            {
+                _text.SetActive(true);
+                _text.GetComponent<Text>().text = _itemData.StackGS.ToString();
+            }
+            else
+            {
+                _text.SetActive(false);
+            }
+        }
+        else
+        {
+            _text.SetActive(false);
+        }
     }
     public ItemData ItemGS
     {
@@ -25,34 +70,80 @@ public class Slot : MonoBehaviour, IPointerClickHandler
         set 
         { 
             _itemData = value;
-            ImageGS = _itemData.Item_Image;
+            NeedItem=true;
+            CheckStack();
+            ImageGS = _itemData.ImageGS;
         }
     }
-    Image ImageGS
+    Sprite ImageGS
     {
         get { return image; }
         set 
         { 
-            image = value; 
-            
+            image = value;
+            _Image.gameObject.GetComponent<Image>().sprite = image;
+            if (_itemData.StackGS > 0) 
+            {
+                _Image.gameObject.GetComponent<Image>().color = new Color(255, 255, 255, 255);
+            }
+            else
+            {
+                _Image.gameObject.GetComponent<Image>().color = new Color(255, 255, 255, 0);
+            }
         }
     }
-    public void OnPointerClick(PointerEventData eventData)
+    public void SlotUse()
     {
-        if (eventData.button == PointerEventData.InputButton.Left)
+        if (CheckNeedItem())
         {
-            Debug.Log("Mouse Click Button : Left");
-        }
-        //else if (eventData.button == PointerEventData.InputButton.Middle)
-        //{
-        //    Debug.Log("Mouse Click Button : Middle");
-        //}
-        else if (eventData.button == PointerEventData.InputButton.Right)
-        {
-            Debug.Log("Mouse Click Button : Right");
-        }
+            Debug.Log("아이템 사용");
+            switch (_itemData.TypeGS)
+            {
+                case ItemType.Food:
+                    Debug.Log("음식 사용");
+                    UseFood();
+                    break;
+                case ItemType.Equipent:
+                    UseEquipment();
+                    break;
+                case ItemType.Furniture:
+                    break;
 
-        //Debug.Log("Mouse Position : " + eventData.position);
-        //Debug.Log("Mouse Click Count : " + eventData.clickCount);
+            }
+        }
+    }
+    public void UseFood()
+    {
+        Player.GetComponent<PlayerData>().SetHp = _itemData.F_HpGet;
+        Player.GetComponent<PlayerData>().SetHunger = _itemData.F_HungerGet;
+        Player.GetComponent<PlayerData>().SetSan = _itemData.F_SanGet;
+        _itemData.StackGS=-1;
+        CheckStack();
+        if(_itemData.StackGS==0)
+        {
+            SlotEmpty();
+        }
+    }
+    void UseEquipment()
+    {
+        ItemData Edata = Player.GetComponent<Equipment>().UseEquipItem(_itemData);
+        if(Edata == null)
+        {
+            SlotEmpty();
+        }
+        else
+        {
+            ItemGS = Edata;
+        }
+        
+    }
+    public void SlotEmpty()
+    {
+        _itemData = null;
+        image = null;
+        _Image.gameObject.GetComponent<Image>().sprite = null;
+        _Image.gameObject.GetComponent<Image>().color = new Color(255, 255, 255, 0);
+        NeedItem = false;
+        CheckStack();
     }
 }
