@@ -105,7 +105,7 @@ TextureImporter:
         width: 69
         height: 69
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -114,6 +114,72 @@ TextureImporter:
       bones: []
       spriteID: cc72588518a3cd7429cb2137cebfca09
       internalID: 770691651
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Dont Starve Dont Starve Together - HUD_1
+      rect:
+        serializedVersion: 2
+        x: 1623
+        y: 1004
+        width: 69
+        height: 69
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9979eac3a21fba74194894727d7f9a86
+      internalID: -1665555747
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Dont Starve Dont Starve Together - HUD_2
+      rect:
+        serializedVersion: 2
+        x: 1554
+        y: 1004
+        width: 69
+        height: 69
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c3e6c7a907d6b1f4caa2219506e07e47
+      internalID: 739006720
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PC Computer - Dont Starve Dont Starve Together - HUD_3
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 1004
+        width: 69
+        height: 69
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 802b45feeccfa3243a47bea48c9cda07
+      internalID: 1754046753
       vertices: []
       indices: 
       edges: []
@@ -133,6 +199,9 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       PC Computer - Dont Starve Dont Starve Together - HUD_0: 770691651
+      PC Computer - Dont Starve Dont Starve Together - HUD_1: -1665555747
+      PC Computer - Dont Starve Dont Starve Together - HUD_2: 739006720
+      PC Computer - Dont Starve Dont Starve Together - HUD_3: 1754046753
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

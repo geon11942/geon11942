@@ -104,13 +104,18 @@ public class Inventory : MonoBehaviour
             }
         }
 
-        if(Input.GetKeyDown(KeyCode.Alpha1))
+        NumKeyDown();
+    }
+
+    void NumKeyDown()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             if (slots[0].CheckNeedItem())
             {
                 slots[0].SlotUse();
-                Debug.Log(Camera.main.WorldToScreenPoint( slots[0].transform.position));
-                Debug.Log(Camera.main.WorldToScreenPoint(Input.mousePosition)); 
+                Debug.Log(Camera.main.WorldToScreenPoint(slots[0].transform.position));
+                Debug.Log(Camera.main.WorldToScreenPoint(Input.mousePosition));
             }
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
